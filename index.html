@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Certificate Generator</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #2c3e50;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            border: 10px solid #d4af37;
+            padding: 20px;
+            background: linear-gradient(to bottom, #1a202c, #2c3e50);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        .gold-border {
+            border: 5px solid #d4af37;
+            padding: 20px;
+            margin: 20px auto;
+        }
+        h1 {
+            font-size: 48px;
+            color: #f1c40f;
+            text-transform: uppercase;
+            margin: 20px 0;
+        }
+        h2 {
+            font-size: 36px;
+            margin: 10px 0;
+            color: #e67e22;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .highlight {
+            color: #1abc9c;
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .signature div {
+            display: inline-block;
+            width: 40%;
+            margin: 0 5%;
+        }
+        button {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #c0392b, #e67e22);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gold-border">
+            <img id="occuledgeLogo" src="https://static.wixstatic.com/media/eb9038_42367e2c8de9468c8e5ff2bcb7910964~mv2.png" alt="Occuledge Logo" style="position: absolute; top: 20px; left: 30px; width: 100px;">
+            <img id="orionLogo" src="https://res.cloudinary.com/learnhat/image/upload/v1641191551/orion-new-website/logo_new_main_q47dby.jpg" alt="Orion Edutech Logo" style="position: absolute; top: 20px; right: 30px; width: 100px;">
+            <h1>Certificate of Achievement</h1>
+            <h2>Presented to</h2>
+            <h2 id="studentName" class="highlight">[Student Name]</h2>
+            <p>
+                For outstanding performance and successful completion of the course: <br>
+                <span id="courseName" class="highlight">[Course Name]</span>
+            </p>
+            <p>
+                Grade Achieved: <span id="grade" class="highlight">[Grade]</span><br>
+                Course Duration: <span id="period" class="highlight">[Course Period]</span>
+            </p>
+            <p>
+                Your dedication and excellence have been recognized by <strong>Occuledge</strong> and <strong>Orion Edutech</strong>.
+            </p>
+            <div class="signature">
+                <div>
+                    <p>Date: <span id="date">[Date]</span></p>
+                </div>
+                <div>
+                    <p>Signature</p>
+                </div>
+            </div>
+        </div>
+        <button onclick="generateCertificate()">Download Certificate</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        function generateCertificate() {
+            const studentName = prompt("Enter Student Name:");
+            const courseName = prompt("Enter Course Name:");
+            const grade = prompt("Enter Grade Achieved:");
+            const period = prompt("Enter Period of Course (e.g., Jan 2024 - Apr 2024):");
+            const date = new Date().toLocaleDateString();
+
+            if (!studentName || !courseName || !grade || !period) {
+                alert("Please provide valid inputs for all fields.");
+                return;
+            }
+
+            // Generate QR Code Data
+            const qrCodeData = `Student: ${studentName}\nCourse: ${courseName}\nGrade: ${grade}\nPeriod: ${period}\nDate: ${date}\nVerified by: Occuledge and Orion Edutech`;
+
+            // Generate QR Code
+            QRCode.toDataURL(qrCodeData, { width: 50 }, function (err, qrCodeURL) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+
+                // Generate PDF
+                const doc = new jsPDF({
+                    orientation: "landscape",
+                    unit: "pt",
+                    format: "a4",
+                });
+
+                // Background styling
+                doc.setFillColor("#2c3e50");
+                doc.rect(0, 0, 841.89, 595.28, "F");
+
+                // Gold Border
+                doc.setDrawColor(212, 175, 55);
+                doc.setLineWidth(10);
+                doc.rect(20, 20, 800, 560, "S");
+
+                // Add Logos
+                const occuledgeLogo = new Image();
+                occuledgeLogo.src = "https://static.wixstatic.com/media/eb9038_42367e2c8de9468c8e5ff2bcb7910964~mv2.png";
+                const orionLogo = new Image();
+                orionLogo.src = "https://res.cloudinary.com/learnhat/image/upload/v1641191551/orion-new-website/logo_new_main_q47dby.jpg";
+
+                occuledgeLogo.onload = function () {
+                    doc.addImage(occuledgeLogo, "PNG", 50, 30, 100, 50);
+                    orionLogo.onload = function () {
+                        doc.addImage(orionLogo, "PNG", 700, 30, 100, 50);
+
+                        // Add Text
+                        doc.setTextColor("#f1c40f");
+                        doc.setFontSize(48);
+                        doc.text("Modular Certificate", 420, 100, { align: "center" });
+
+                        doc.setTextColor("#e67e22");
+                        doc.setFontSize(36);
+                        doc.text("Presented to", 420, 160, { align: "center" });
+
+                        doc.setTextColor("#1abc9c");
+                        doc.setFontSize(36);
+                        doc.text(studentName, 420, 220, { align: "center" });
+
+                        doc.setTextColor("#ecf0f1");
+                        doc.setFontSize(24);
+                        doc.text(
+                            `For outstanding performance and successful completion of:`,
+                            420,
+                            280,
+                            { align: "center" }
+                        );
+
+                        doc.setTextColor("#3498db");
+                        doc.setFontSize(28);
+                        doc.text(`"${courseName}"`, 420, 330, { align: "center" });
+
+                        doc.setTextColor("#ecf0f1");
+                        doc.setFontSize(20);
+                        doc.text(`Grade: ${grade}`, 420, 370, { align: "center" });
+                        doc.text(`Period: ${period}`, 420, 400, { align: "center" });
+
+                        doc.setTextColor("#ecf0f1");
+                        doc.setFontSize(18);
+                        doc.text(
+                            `Your excellence has been recognized by Occuledge and Orion Edutech India .`,
+                            420,
+                            430,
+                            { align: "center" }
+                        );
+
+                        // Footer
+                        doc.setFontSize(18);
+                        doc.setTextColor("#ffffff");
+                        doc.text(`Date: ${date}`, 150, 500, { align: "left" });
+                        doc.text("Signature", 500, 500, { align: "left" });
+
+                        // Add QR Code
+                        doc.addImage(qrCodeURL, "PNG", 600, 300, 100, 100);
+
+                        // Save the PDF
+                        doc.save(`${studentName}_Certificate.pdf`);
+                    };
+                };
+            });
+        }
+    </script>
+</body>
+</html>
