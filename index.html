@@ -104,6 +104,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script>
+     // Prompt for password
+        const password = "boct2024";
+        const userPassword = prompt("Enter the password to access this page:");
+        if (userPassword !== password) {
+            alert("Incorrect password! Redirecting...");
+            window.location.href = "https://example.com"; // Change to your redirect URL
+        }
         const { jsPDF } = window.jspdf;
 
         function generateCertificate() {
